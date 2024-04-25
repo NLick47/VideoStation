@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="video-info-uper custom-image-container" >
-                <a :href="'http://localhost:8080/Mine/' " target="_blank">
+                <a :href="'/account/'+uper.id " target="_blank">
                     <el-image fit="cover" 
                         :src="this.$staticRoot + uper.avatar" alt="">
                         <template #error>
@@ -37,7 +37,7 @@
                         </template>
                     </el-image>
                 </a>
-                <a :href="'https://kotokawa-akira-mywife.site/web/Mine/' " target="_blank">
+                <a :href="'/account/'+uper.id" target="_blank">
                     <div class="video-info-uper-name">
                         {{ uper.userName }}
                     </div>
@@ -79,7 +79,7 @@
                         </div>
                     </div>
                     <div class="options-info">
-                        <a :href="'https://kotokawa-akira-mywife.site/web/Mine/' " target="_blank">
+                        <a :href="'account/' + uper.id " target="_blank">
                             <el-image fit="cover" draggable="false"
                                 :src="this.$staticRoot + video.coverUri"
                                 alt="">
@@ -89,7 +89,7 @@
                                 </template>
                             </el-image>
                         </a>
-                        <a :href="'https://kotokawa-akira-mywife.site/web/Mine/' " target="_blank">
+                        <a :href="'/account/'+uper.id " target="_blank">
                             <div class="options-img-name">{{ uper.userName }}</div>
                         </a>
                     </div>
@@ -110,7 +110,7 @@
                     <ul>
                         <li class="lower-comments-li" v-for="(item, index) in comments" :key="item.time">
                             <div class="lower-comments-li-header">
-                                <a :href="'https://kotokawa-akira-mywife.site/web/Mine/' + item.user.id">
+                                <a :href="'/account/' + item.user.id">
                                     <div class="lower-comments-li-img-container">
                                         <el-image fit="cover" draggable="false"
                                             :src="this.$staticRoot +item.user.avatar"
@@ -123,7 +123,7 @@
                                         </el-image>
                                     </div>
                                 </a>
-                                <a :href="'https://kotokawa-akira-mywife.site/web/Mine/' + item.user.id">
+                                <a :href="'/account/' + item.user.id">
                                     <div class="lower-comments-li-header-name">
                                         {{ item.user.userName }}
                                     </div>
@@ -151,7 +151,7 @@
                                     <div class="lower-comments-li-header">
                                         <div style="width:40px;height:40px;border-radius: 20px;overflow: hidden;"
                                             class="lower-comments-li-img-container">
-                                            <a :href="'https://kotokawa-akira-mywife.site/web/Mine/'">
+                                            <a :href="'/account/'+reply.user.id">
                                                 <el-image style="width:40px;height:40px;" fit="cover" draggable="false"
                                                     :src="this.$staticRoot+reply.user.avatar"
                                                     alt="">
@@ -163,7 +163,7 @@
                                                 </el-image>
                                             </a>
                                         </div>
-                                        <a :href="'https://kotokawa-akira-mywife.site/web/Mine/'">
+                                        <a :href="'/account/'+reply.user.id">
                                             <div style="font-size:18px" class="lower-comments-li-header-name">
                                                 {{ reply.user.userName }}
                                             </div>

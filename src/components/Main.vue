@@ -17,7 +17,7 @@
                         </a>
                         <div class="main-recommend-li-detail-container">
                             <div class="main-recommend-li-detail" >
-                                <a :href="'https://kotokawa-akira-mywife.site/web/Mine/' + item.user.id" target="_blank">
+                                <a :href="'/account/' + item.user.id" target="_blank">
                                     <div class="upName_span">
                                          {{ item.user.userName }} 
                                     </div>
@@ -39,7 +39,7 @@
                                         <path
                                             d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1 12v-6h-2v8h7v-2h-5z" />
                                     </svg>
-                                    <!-- <span>{{ item.time.slice(0, 10) }}</span> -->2013-10-10
+                                    <span>{{ item.createTime.slice(0, 10) }}</span>
                                 </div>
                             </div>
                         </div>

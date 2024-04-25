@@ -37,7 +37,7 @@
                         <template #reference>
                             <div style="color:#fff;height:100%;width:100%;background-color:var(--ava);font-size:20px;display:flex;align-items: center;justify-content: center;"
                                 v-if="!isLogin">登录</div>
-                            <img draggable="false" v-else class="img_profile" :src="this.$store.state.userInfo ==null ? this.$defaultAvatar :this.$staticRoot + this.$store.state.userInfo.avatar" alt="">
+                            <img draggable="false" v-else class="img_profile" :src="this.$store.state.userInfo ==null || this.$store.state.userInfo.avatar == null ? this.$defaultAvatar :this.$staticRoot + this.$store.state.userInfo.avatar" alt="">
                         </template>
                         <template v-if="isLogin" #default>
                             <div class="mine-detail-name">

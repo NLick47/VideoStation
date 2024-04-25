@@ -13,7 +13,7 @@
                                     d="M12.015 7c4.751 0 8.063 3.012 9.504 4.636-1.401 1.837-4.713 5.364-9.504 5.364-4.42 0-7.93-3.536-9.478-5.407 1.493-1.647 4.817-4.593 9.478-4.593zm0-2c-7.569 0-12.015 6.551-12.015 6.551s4.835 7.449 12.015 7.449c7.733 0 11.985-7.449 11.985-7.449s-4.291-6.551-11.985-6.551zm-.015 3c-2.209 0-4 1.792-4 4 0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.208-1.791-4-4-4z" />
                             </svg>
                         </div>
-                        <el-switch v-model="item.visible" class="mt-2" style="margin-left: 24px" inline-prompt
+                        <el-switch :model-value="!item.isVisible" class="mt-2" style="margin-left: 24px" inline-prompt
                             @change="setVisible(item)" />
                     </div>
                 </div>
@@ -67,7 +67,8 @@ export default {
             isLoading: true,
             collection: [],
             pageSize: 10,
-            currentPages: []
+            currentPages: [],
+          
         }
     },
     computed: {
@@ -75,7 +76,7 @@ export default {
             if (this.collection.length == 0)
                 return false;
             else return true
-        }
+        },
     },
     watch: {
         collection(value) {
@@ -90,7 +91,9 @@ export default {
     methods: {
         getCollection() {
             this.isLoading = true;
-            fetch('http://localhost:8080/collection/accountList/'+this.user.id,{ method: 'get' })
+            fetch('http://localhost:8080/collection/accountList/'+this.user.id,{ method: 'get',headers:{
+                "Authorization": `Bearer ${window.localStorage.getItem('token')}` 
+            } })
                 .then(res => {
                     return res.json();
                 }).then(data => {
@@ -104,22 +107,21 @@ export default {
                 confirmButtonText: "确定",
                 cancelButtonText: '取消'
             }).then(() => {
-                fetch('https://kotokawa-akira-mywife.site/web/api/collection/removeFromCollection', {
-                    method: "post",
+                fetch('http://localhost:8080/collection/Remove/'+videoid, {
+                    method: "put",
                     headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ id: this.user.id, name: Name, videoId: videoid }),
-                    credentials: "include"
+                        "Content-Type": "application/json",
+                         "Authorization": `Bearer ${window.localStorage.getItem('token')}` 
+                    }, 
                 }).then(res => {
                     return res.json();
                 }).then(data => {
-                    if (data.success == 'true')
+                    if (data && data.result)
                         ElMessage({
                             message: "成功移除收藏夹",
                             type: 'success'
                         });
-                    this.getCollection();
+                    this.collection = data.data;
                 });
             }).catch(() => { });
         },
@@ -130,46 +132,56 @@ export default {
                 inputPlaceholder: '收藏夹名',
                 inputValue: oldName
             }).then(res => {
-                if (res.value.includes(":")) {
-                    ElMessageBox.alert("由于系统设计，不能输入 ':' 字符","错误",{
+                if (res.value.length > 8) {
+                    ElMessageBox.alert("名称不能超过8个字符","错误",{
                         confirmButtonText:"确定",
                         type:"error"
                     });
                     return;
                 }
-                fetch('https://kotokawa-akira-mywife.site/web/api/collection/renameCollection', {
-                    method: "post",
+                fetch('http://localhost:8080/collection/rename?oldName='+encodeURIComponent(oldName) +"&newName="+encodeURIComponent(res.value), {
+                    method: "put",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                         "Authorization": `Bearer ${window.localStorage.getItem('token')}` 
                     },
-                    body: JSON.stringify({ id: this.user.id, name: oldName, newName: res.value }),
-                    credentials: "include"
                 }).then(res => {
                     return res.json();
                 }).then(data => {
-                    if (data.success == 'true') {
+                    if (data && data.result) {
                         ElMessage({
                             message: "成功重命名",
                             type: 'success'
                         });
                         this.getCollection();
-                    } else if (data.reason == "KeyExists") ElMessageBox.alert("收藏夹已存在!", "提示", {
+                    } else{
+                         ElMessageBox.alert(data.mesg, "提示", {
                         confirmButtonText: "确定"
                     });
+                    }
+                    
                 });
             }).catch(() => { });
         },
         setVisible(item) {
-            fetch('https://kotokawa-akira-mywife.site/web/api/collection/setVisible', {
-                method: "post",
+            fetch('http://localhost:8080/collection/ChangeVisible/'+encodeURIComponent(item.name) , {
+                method: "put",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                     "Authorization": `Bearer ${window.localStorage.getItem('token')}` 
                 },
-                body: JSON.stringify({ id: this.user.id, name: item.name, visible: item.visible }),
-                credentials: "include"
             }).then(res => {
                 return res.json();
-            })
+            }).then(data => {
+                if (data && data.result) {
+                    item.isVisible = !item.isVisible;
+                } else{
+                    ElMessageBox.alert(data.mesg, "提示", {
+                        confirmButtonText: "确定"
+                    });
+                }
+            });
+           
         },
         currentChange(index, value) {
             this.currentPages[index] = value;
